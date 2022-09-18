@@ -4,7 +4,7 @@ const sequelize = require("./config/connection");
 
 // import sequelize connection
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3302;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -16,9 +16,3 @@ sequelize.sync({ force: false }).then(() => {
     console.log(`App listening on port ${PORT}!`);
   });
 });
-try {
-  await sequelize.authenticate();
-  console.log("Connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
