@@ -39,12 +39,41 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   // update a tag's name by its `id` value
+  try {
+    const tagData = await Tag.findByPk(req.params.id);
+    const updateTag = await Tag.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.status(200).json(updateTag);
+    if (!tagData) {
+      res.status(404).json({ message: "Could not find:" + req.params.id });
+      return;
+    }
+  } catch {
+    (err) => res.json(err);
+  }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete on tag by its `id` value
+  try {
+    const deletedTag = await Tag.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!deletedTag) {
+      res.status(404).json({ message: "Could not find:" + req.params.id });
+      return;
+    }
+    res.status(200).json(deletedTag);
+  } catch {
+    (err) => res.json(err);
+  }
 });
 
 module.exports = router;
