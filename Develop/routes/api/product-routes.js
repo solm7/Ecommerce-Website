@@ -33,7 +33,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 // create new product
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -106,8 +106,22 @@ router.put("/:id", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete one product by its `id` value
+  try {
+    const deletedProduct = await Product.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!deletedProduct) {
+      res.status(404).json({ message: "Could not find:" + req.params.id });
+      return;
+    }
+    res.status(200).json(deletedProduct);
+  } catch {
+    (err) => res.json(err);
+  }
 });
 
 module.exports = router;
